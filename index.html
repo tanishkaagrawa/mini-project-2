@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TasteHub</title>
+    <style>
+        * {
+            margin: 0px; 
+            padding: 0px; 
+            box-sizing: border-box;
+        }
+        body, html {
+            height: 100vh;
+            width: 100%;
+            font-family: Poppins-Regular, sans-serif;
+            background-image: url("bg.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+            object-fit:cover;
+        }
+
+        @font-face {
+        font-family: Poppins-Regular;
+        src: url('../fonts/poppins/Poppins-Regular.ttf'); 
+        }
+
+        @font-face {
+        font-family: Poppins-Medium;
+        src: url('../fonts/poppins/Poppins-Medium.ttf'); 
+        }
+
+        @font-face {
+        font-family: Poppins-Bold;
+        src: url('../fonts/poppins/Poppins-Bold.ttf'); 
+        }
+
+        @font-face {
+        font-family: Poppins-SemiBold;
+        src: url('../fonts/poppins/Poppins-SemiBold.ttf'); 
+        }
+       
+    </style>
+</head>
+<body>
+    <!-- <img src="bg.jpg" alt=""> -->
+    <div class="container">
+        <span class="login" >
+            <h2>LogIn</h2>
+        </span>
+        
+        <div>
+            <form action="/login" method="post">
+                <div>
+                    <input type="text" name="username" placeholder="username">
+                </div>
+                <div>
+                    <input type="password" name="password" placeholder="password">
+                </div>
+                <div>
+                    <input type="submit">
+                </div>
+                <div>
+                    <a href="/signup">Create an account</a>
+                </div>
+            </form>
+        </div>
+        
+    </div>
+</body>
+</html>
