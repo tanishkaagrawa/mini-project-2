@@ -3,7 +3,7 @@ const app=express();
 const path=require("path");
 // const login=require("./mongodb");
 // const addrecipe=require("./mongodb");
-const{login, addrecipe}=require("./mongodb.js");
+const{login, addrecipe, Review}=require("./mongodb.js");
 const multer=require("multer");
 // const fileUpload=require("express-fileupload");
 // const cloudinary=require('cloudinary').v2;
@@ -84,29 +84,21 @@ app.post("/signup",async (req,res)=>{
 
     await login.register(user, password);
 
-    res.render("home")
+    res.redirect('/recipe');
 
 })
 app.post("/login",passport.authenticate('local', { failureRedirect: '/'}),async (req,res)=>{
-    // try{
-    //     const d2=await login.findOne({username:req.body.username,password:req.body.password})
-    //     // console.log()
-    //     if(d2){
-    //         res.render("home");
-    //     }
-    //     else{
-    //         res.send("incorrect password");
-    //     }
-    // }
-    // catch{
-    //     res.send("incorrect username and password");
-    // }
-    res.render("home");
+    
+    res.redirect('/recipe');
 })
-app.get("/addrecipe", async(req,res)=>{
+app.get('/addrecipe', (req,res)=>{
     res.render('addrecipe');
 })
-app.post("/addrecipe",async(req,res)=>{
+app.get("/recipe", async(req,res)=>{
+    const allRecipe = await addrecipe.find({})
+    res.render('home', {allRecipe});
+})
+app.post("/recipe",async(req,res)=>{
     
     try {
         const {recipeName, imageUrl, servings, prepTime, cookTime,ingredients, instructions, notes} = req.body;
@@ -116,15 +108,43 @@ app.post("/addrecipe",async(req,res)=>{
         await d3.save();
         // req.flash('success', "product created successfully")
         // req.flash('info', 'Flash is back!')
-        res.render('home');
+        res.redirect('/recipe');
       } catch (error) {
         //  req.flash("error", "something is going wrong")
         res.status(500).json({error:error.message});
       }
 })
-app.get("/recipe", async (req,res)=>{
 
-        res.render('home');
+app.get("/recipe/:id", async(req, res)=>{
+    const id = req.params.id;
+    const singleRecipe = await addrecipe.findById(id).populate('review');
+    console.log(singleRecipe);
+    res.render("singlerecipe", {singleRecipe});
+})
+app.post("/review/:id", async(req,res) => {
+    const {id} = req.params;
+    const recipe = await addrecipe.findById(id);
+
+
+    const {rating, comment}= req.body;
+    const review = await Review.create({rating, comment});
+
+
+   recipe.review.push(review);
+
+   await recipe.save();
+
+   res.redirect(`/recipe/${id}`);
+
+
+})
+
+app.delete('/review/:reviewId/:recipeId',async(req, res)=>{
+    const {reviewId} = req.params;
+    const {recipeId} = req.params;
+    await Review.findByIdAndDelete(reviewId);
+
+    res.redirect(`/recipe/${recipeId}`);
 })
 
 
